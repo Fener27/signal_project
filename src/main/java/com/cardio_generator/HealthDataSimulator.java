@@ -11,7 +11,7 @@ import com.cardio_generator.generators.BloodSaturationDataGenerator;
 import com.cardio_generator.generators.BloodLevelsDataGenerator;
 import com.cardio_generator.generators.ECGDataGenerator;
 import com.cardio_generator.outputs.ConsoleOutputStrategy;
-import com.cardio_generator.outputs.fileOutputStrategy;
+import com.cardio_generator.outputs.FileOutputStrategy;
 import com.cardio_generator.outputs.OutputStrategy;
 import com.cardio_generator.outputs.TcpOutputStrategy;
 import com.cardio_generator.outputs.WebSocketOutputStrategy;
@@ -32,7 +32,7 @@ public class HealthDataSimulator {
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
     private static final Random random = new Random();
 
-    public static void main(String[] args) throws IOException {
+    /* public static void main(String[] args) throws IOException {
 
         parseArguments(args);
 
@@ -40,6 +40,24 @@ public class HealthDataSimulator {
 
         List<Integer> patientIds = initializePatientIds(patientCount);
         Collections.shuffle(patientIds); // Randomize the order of patient IDs
+
+        scheduleTasksForPatients(patientIds);
+    } */
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("DEBUG: Starting main method..."); // Trace 1
+        
+        parseArguments(args);
+        
+        System.out.println("DEBUG: Arguments parsed successfully."); // Trace 2
+        System.out.println("DEBUG: Patient Count: " + patientCount);
+        System.out.println("DEBUG: Output Strategy: " + outputStrategy.getClass().getSimpleName());
+
+        //scheduler = Executors.newScheduledThreadPool(patientCount * 4);
+        scheduler = Executors.newScheduledThreadPool(10);
+        
+        List<Integer> patientIds = initializePatientIds(patientCount);
+        System.out.println("DEBUG: IDs initialized. Starting scheduler..."); // Trace 3
 
         scheduleTasksForPatients(patientIds);
     }
@@ -69,10 +87,12 @@ public class HealthDataSimulator {
                         } else if (outputArg.startsWith("file:")) {
                             String baseDirectory = outputArg.substring(5);
                             Path outputPath = Paths.get(baseDirectory);
+                            System.out.println("Simulation started for " + patientCount + " patients.");
+                            System.out.println("Output is being sent to: " + outputStrategy.getClass().getSimpleName());
                             if (!Files.exists(outputPath)) {
                                 Files.createDirectories(outputPath);
                             }
-                            outputStrategy = new fileOutputStrategy(baseDirectory);
+                            outputStrategy = new FileOutputStrategy(baseDirectory);
                         } else if (outputArg.startsWith("websocket:")) {
                             try {
                                 int port = Integer.parseInt(outputArg.substring(10));

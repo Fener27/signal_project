@@ -16,7 +16,7 @@ import com.cardio_generator.outputs.OutputStrategy;
 import com.cardio_generator.outputs.TcpOutputStrategy;
 import com.cardio_generator.outputs.WebSocketOutputStrategy;
 
-import java.util.Collections;
+// java.util.Collections is not used
 import java.util.List;
 import java.util.Random;
 import java.io.IOException;
@@ -30,19 +30,8 @@ public class HealthDataSimulator {
     private static int patientCount = 50; // Default number of patients
     private static ScheduledExecutorService scheduler;
     private static OutputStrategy outputStrategy = new ConsoleOutputStrategy(); // Default output strategy
-    private static final Random random = new Random();
-
-    /* public static void main(String[] args) throws IOException {
-
-        parseArguments(args);
-
-        scheduler = Executors.newScheduledThreadPool(patientCount * 4);
-
-        List<Integer> patientIds = initializePatientIds(patientCount);
-        Collections.shuffle(patientIds); // Randomize the order of patient IDs
-
-        scheduleTasksForPatients(patientIds);
-    } */
+    // Modified the final variable name to UPPER_SNAKE_CASE
+    private static final Random RANDOM = new Random();
 
     public static void main(String[] args) throws IOException {
         System.out.println("DEBUG: Starting main method..."); // Trace 1
@@ -167,6 +156,6 @@ public class HealthDataSimulator {
     }
 
     private static void scheduleTask(Runnable task, long period, TimeUnit timeUnit) {
-        scheduler.scheduleAtFixedRate(task, random.nextInt(5), period, timeUnit);
+        scheduler.scheduleAtFixedRate(task, RANDOM.nextInt(5), period, timeUnit);
     }
 }

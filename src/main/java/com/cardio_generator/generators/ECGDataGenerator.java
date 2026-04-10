@@ -5,7 +5,8 @@ import java.util.Random;
 import com.cardio_generator.outputs.OutputStrategy;
 
 public class ECGDataGenerator implements PatientDataGenerator {
-    private static final Random random = new Random();
+    // Changed name variable to UPPER_SNAKE_CASE
+    private static final Random RANDOM = new Random();
     private double[] lastEcgValues;
     private static final double PI = Math.PI;
 
@@ -32,7 +33,7 @@ public class ECGDataGenerator implements PatientDataGenerator {
 
     private double simulateEcgWaveform(int patientId, double lastEcgValue) {
         // Simplified ECG waveform generation based on sinusoids
-        double hr = 60.0 + random.nextDouble() * 20.0; // Simulate heart rate variability between 60 and 80 bpm
+        double hr = 60.0 + RANDOM.nextDouble() * 20.0; // Simulate heart rate variability between 60 and 80 bpm
         double t = System.currentTimeMillis() / 1000.0; // Use system time to simulate continuous time
         double ecgFrequency = hr / 60.0; // Convert heart rate to Hz
 
@@ -41,6 +42,6 @@ public class ECGDataGenerator implements PatientDataGenerator {
         double qrsComplex = 0.5 * Math.sin(2 * PI * 3 * ecgFrequency * t); // QRS is higher frequency
         double tWave = 0.2 * Math.sin(2 * PI * 2 * ecgFrequency * t + PI / 4); // T wave is offset
 
-        return pWave + qrsComplex + tWave + random.nextDouble() * 0.05; // Add small noise
+        return pWave + qrsComplex + tWave + RANDOM.nextDouble() * 0.05; // Add small noise
     }
 }

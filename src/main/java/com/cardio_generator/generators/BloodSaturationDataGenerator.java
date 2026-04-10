@@ -5,7 +5,8 @@ import java.util.Random;
 import com.cardio_generator.outputs.OutputStrategy;
 
 public class BloodSaturationDataGenerator implements PatientDataGenerator {
-    private static final Random random = new Random();
+    // Changed name variable to UPPER_SNAKE_CASE
+    private static final Random RANDOM = new Random();
     private int[] lastSaturationValues;
 
     public BloodSaturationDataGenerator(int patientCount) {
@@ -13,7 +14,7 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
 
         // Initialize with baseline saturation values for each patient
         for (int i = 1; i <= patientCount; i++) {
-            lastSaturationValues[i] = 95 + random.nextInt(6); // Initializes with a value between 95 and 100
+            lastSaturationValues[i] = 95 + RANDOM.nextInt(6); // Initializes with a value between 95 and 100
         }
     }
 
@@ -21,7 +22,7 @@ public class BloodSaturationDataGenerator implements PatientDataGenerator {
     public void generate(int patientId, OutputStrategy outputStrategy) {
         try {
             // Simulate blood saturation values
-            int variation = random.nextInt(3) - 1; // -1, 0, or 1 to simulate small fluctuations
+            int variation = RANDOM.nextInt(3) - 1; // -1, 0, or 1 to simulate small fluctuations
             int newSaturationValue = lastSaturationValues[patientId] + variation;
 
             // Ensure the saturation stays within a realistic and healthy range

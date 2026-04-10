@@ -9,22 +9,21 @@ import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FileOutputStrategy implements OutputStrategy {
-
-    private String BaseDirectory;
-
-    public final ConcurrentHashMap<String, String> file_map = new ConcurrentHashMap<>();
+    // Modified the variable name to camelCase
+    private String baseDirectory;
+    // Modified the final variable name to UPPER_SNAKE_CASE
+    public final ConcurrentHashMap<String, String> FILE_MAP = new ConcurrentHashMap<>();
 
     public FileOutputStrategy(String baseDirectory) {
-
-        this.BaseDirectory = baseDirectory;
+        // Modified the assigned variables
+        this.baseDirectory = baseDirectory;
     }
 
     @Override
     public void output(int patientId, long timestamp, String label, String data) {
-        // Set the FilePath variable
-        String FilePath = file_map.computeIfAbsent(label, k -> Paths.get(BaseDirectory, label + ".txt").toString());
-
-        try (PrintWriter out = new PrintWriter(new FileWriter(FilePath, true))) {
+        // Modified the variable name to camelCase
+        String filePath = FILE_MAP.computeIfAbsent(label, k -> Paths.get(baseDirectory, label + ".txt").toString());
+        try (PrintWriter out = new PrintWriter(new FileWriter(filePath, true))) {
             out.printf("Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n", patientId, timestamp, label, data);
             out.flush(); // Force the computer to write to disk RIGHT NOW
         } catch (IOException e) {
@@ -33,10 +32,10 @@ public class FileOutputStrategy implements OutputStrategy {
 
         // Write the data to the file
         try (PrintWriter out = new PrintWriter(
-                Files.newBufferedWriter(Paths.get(FilePath), StandardOpenOption.CREATE, StandardOpenOption.APPEND))) {
+            Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.CREATE, StandardOpenOption.APPEND))) {
             out.printf("Patient ID: %d, Timestamp: %d, Label: %s, Data: %s%n", patientId, timestamp, label, data);
         } catch (Exception e) {
-            System.err.println("Error writing to file " + FilePath + ": " + e.getMessage());
+            System.err.println("Error writing to file " + filePath + ": " + e.getMessage());
         }
     }
 }

@@ -5,7 +5,8 @@ import java.util.Random;
 import com.cardio_generator.outputs.OutputStrategy;
 
 public class BloodLevelsDataGenerator implements PatientDataGenerator {
-    private static final Random random = new Random();
+    // Changed name variable to UPPER_SNAKE_CASE
+    private static final Random RANDOM = new Random();
     private final double[] baselineCholesterol;
     private final double[] baselineWhiteCells;
     private final double[] baselineRedCells;
@@ -18,9 +19,9 @@ public class BloodLevelsDataGenerator implements PatientDataGenerator {
 
         // Generate baseline values for each patient
         for (int i = 1; i <= patientCount; i++) {
-            baselineCholesterol[i] = 150 + random.nextDouble() * 50; // Initial random baseline
-            baselineWhiteCells[i] = 4 + random.nextDouble() * 6; // Initial random baseline
-            baselineRedCells[i] = 4.5 + random.nextDouble() * 1.5; // Initial random baseline
+            baselineCholesterol[i] = 150 + RANDOM.nextDouble() * 50; // Initial random baseline
+            baselineWhiteCells[i] = 4 + RANDOM.nextDouble() * 6; // Initial random baseline
+            baselineRedCells[i] = 4.5 + RANDOM.nextDouble() * 1.5; // Initial random baseline
         }
     }
 
@@ -28,9 +29,9 @@ public class BloodLevelsDataGenerator implements PatientDataGenerator {
     public void generate(int patientId, OutputStrategy outputStrategy) {
         try {
             // Generate values around the baseline for realism
-            double cholesterol = baselineCholesterol[patientId] + (random.nextDouble() - 0.5) * 10; // Small variation
-            double whiteCells = baselineWhiteCells[patientId] + (random.nextDouble() - 0.5) * 1; // Small variation
-            double redCells = baselineRedCells[patientId] + (random.nextDouble() - 0.5) * 0.2; // Small variation
+            double cholesterol = baselineCholesterol[patientId] + (RANDOM.nextDouble() - 0.5) * 10; // Small variation
+            double whiteCells = baselineWhiteCells[patientId] + (RANDOM.nextDouble() - 0.5) * 1; // Small variation
+            double redCells = baselineRedCells[patientId] + (RANDOM.nextDouble() - 0.5) * 0.2; // Small variation
 
             // Output the generated values
             outputStrategy.output(patientId, System.currentTimeMillis(), "Cholesterol", Double.toString(cholesterol));

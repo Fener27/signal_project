@@ -1,0 +1,18 @@
+DataListener(interface)
+Designed to decouple the internal system from external communication protocols. By implementing the
+interface to the specific listeners (TCP, WebSocket, File), the CHMS can interact with a generic data
+source without needing to know the technical details of how the data arrives. This makes sure that if
+a new communication method is required in the future, it can be added without needing to know the type
+of listener.
+
+DataParser(class)
+Serves as the translation layer that converts raw strings into structured
+PatientRecord objects. The goal for this design is to centralize the parsing logic(depending on the
+format of the data) into one class. This prevents the listeners from having to manage data formatting
+themselves and ensures the rest of the system receives a consistent data format.
+
+DataSourceAdapter(class)
+Acts as the final gateway: it bridges the gap between data ingestion and the core storage system.
+Its goal is to map the generic PatientRecord output from the parser into the specific method required
+by DataStorage. By doing so, the system remains modular; the way data is received and parsed can evolve
+independently of how the data is actually stored.

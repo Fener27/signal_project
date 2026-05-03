@@ -1,0 +1,14 @@
+PatientIdentifier(class)
+Designed to be the primary point of contact for incoming data streams. Its goal is to provide a lookup service
+that translates raw IDs into HospitalPatient objects. By including a resolveId method, the system ensures that
+no data point remains anonymous. This fulfills the requirement for real time patient matching.
+
+HospitalPatient(class)
+Acts as the source of truth. Basically, the class includes history and verificationStatus to provide the medical
+staff with context(not only the name of the patient). This allows the system to provide the historical trends
+necessary for informed clinical analysis.
+
+IdentityManager(class)
+Included as the system's failsafe. The class' design is to handle mismatches and anomalies. By doing this
+into a class, the system can handle cases where a patient is not found in the database without crashing
+the data stream, logging the error for administrative review instead.

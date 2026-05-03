@@ -1,0 +1,20 @@
+AlertGenerator(class)
+Acts as the system's brain, using a Map<String, double> to store
+personalized thresholds for different health metrics. This allows the system to compare 
+incoming vitals against the limits of the patients in real time. The dependency on the 
+Alert class ensures that an alert object is only instantiated when a specific threshold 
+is triggered, maintaining an efficient workflow.
+
+Alert(class)
+The Alert class' main idea is to transfer data. It is designed to package all critical 
+information (patientID, condition, timeStamp and urgencyLevel) into a single unit.
+This design ensures that medical staff receive a complete context of the emergency. By
+separating the alert data from the generation logic, the system remains scalable and can
+process high volumes of events without losing metadata.
+
+AlertManager(class) & MedicalStaff(class)
+Handles the distribution and routing of alerts to the appropriate staff.
+By maintaining a staffRegistry, the manager can target specific individuals or roles
+based on the alert's nature. The 1 to 1..n multiplicity shows that one central manager
+can coordinate with multiple staff members, ensuring that every triggered alert is reliably
+delivered to a person.

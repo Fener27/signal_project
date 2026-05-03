@@ -1,0 +1,20 @@
+PatientData(class)
+Designed as the fundamental unit of storage, representing a single long record of a patient's vitals.
+To satisfy the requirements for historical trend analysis, the class includes a timestamp and measurementValue
+to make sure that data can be ordered chronologically. Furthermore, versionTag or recordType allows for data
+versioning, ensuring that if a record is updated or a new measurement type is added, the historical integrity
+of the data remains intact.
+
+DataStorage(interface)
+Modeled as the central interface to decouple the storage logic from the rest of the system.
+A critical design choice here is the inclusion of a deletionPolicy attribute and a purgeOldData
+method to handle the patient's data lifecycle. This prevents that old data doesn't stay after a set period, optimizing
+storage space and following data retention regulations. By defining this as an interface,
+the system can support different storage implementations (SQL, NoSQL, or Encrypted Cloud) while maintaining
+a consistent security protocol for incoming signal data.
+
+DataRetriever(class)
+Manages the flow of data out of the system, specifically handling queries from medical staff. In order to use the
+getRecords method, the method authenticateStaff needs to be true (it requires a token parameter, ensuring that
+staff can only retrieve data they are authorized to see). The methods are structured to support monitoring in
+real time and for trend analysis.

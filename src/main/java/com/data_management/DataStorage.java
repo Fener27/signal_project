@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import com.alerts.AlertGenerator;
 import com.alerts.strategies.BloodPressureStrategy;
 import com.alerts.strategies.HeartRateStrategy;
@@ -17,16 +18,14 @@ import com.alerts.strategies.OxygenSaturationStrategy;
  */
 public class DataStorage {
     private static DataStorage instance;
-    private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
+    private Map<Integer, Patient> patientMap = new ConcurrentHashMap<>();
     private DataReader reader;
 
     /**
      * Constructs a new instance of DataStorage, initializing the underlying storage
      * structure.
      */
-    public DataStorage() {
-        this.patientMap = new HashMap<>();
-    }
+    public DataStorage() {}
 
     public DataStorage(DataReader reader) {
         this.patientMap = new HashMap<>();
@@ -59,11 +58,9 @@ public class DataStorage {
      *                         milliseconds since the Unix epoch
      */
     public void addPatientData(int patientId, double measurementValue, String recordType, long timestamp) {
-        Patient patient = patientMap.get(patientId);
-        if (patient == null) {
-            patient = new Patient(patientId);
-            patientMap.put(patientId, patient);
-        }
+        Patient patient = patientMap.computeIfAbsent(patientId, Patient::new);
+        
+        // Preventing duplicate information
         patient.addRecord(measurementValue, recordType, timestamp);
     }
 

@@ -12,9 +12,9 @@ public class Main {
             // Allowing to run the DataStorage class
             DataStorage.main(new String[]{});
         } else {
-            // Run the HealthDataSimulator as default
+            // Access via Singleton
             try {
-                HealthDataSimulator.main(new String[]{});
+                HealthDataSimulator.getInstance().run(args);
             } catch (Exception e) {
                 e.printStackTrace();
             }

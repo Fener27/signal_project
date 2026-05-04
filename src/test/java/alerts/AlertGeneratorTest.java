@@ -1,15 +1,20 @@
 package alerts;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.data_management.DataStorage;
 import com.data_management.Patient;
 import com.alerts.AlertGenerator;
+import com.alerts.strategies.BloodPressureStrategy;
+import com.alerts.strategies.HeartRateStrategy;
+import com.alerts.strategies.HypotensiveHypoxemiaStrategy;
+import com.alerts.strategies.OxygenSaturationStrategy;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 
 /**
  * Tests for AlertGenerator to verify critical thresholds.
@@ -21,9 +26,15 @@ public class AlertGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        storage = new DataStorage();
+        System.setOut(new java.io.PrintStream(outputStreamCaptor));
+
+        storage = DataStorage.getInstance();
         generator = new AlertGenerator(storage);
-        System.setOut(new PrintStream(outputStreamCaptor));
+        
+        generator.addStrategy(new BloodPressureStrategy());
+        generator.addStrategy(new OxygenSaturationStrategy());
+        generator.addStrategy(new HeartRateStrategy());
+        generator.addStrategy(new HypotensiveHypoxemiaStrategy());
     }
 
     @Test
@@ -140,5 +151,11 @@ public class AlertGeneratorTest {
 
         assertTrue(outputStreamCaptor.toString().contains("Abnormal ECG Peak"),
             "Alert should trigger when an ECG peak exceeds the sliding window average");
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Reset the system output
+        System.setOut(System.out);
     }
 }

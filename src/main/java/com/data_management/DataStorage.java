@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.alerts.AlertGenerator;
+import com.alerts.strategies.BloodPressureStrategy;
+import com.alerts.strategies.HeartRateStrategy;
+import com.alerts.strategies.OxygenSaturationStrategy;
 
 /**
  * Manages storage and retrieval of patient data within a healthcare monitoring
@@ -13,6 +16,7 @@ import com.alerts.AlertGenerator;
  * patient IDs.
  */
 public class DataStorage {
+    private static DataStorage instance;
     private Map<Integer, Patient> patientMap; // Stores patient objects indexed by their unique patient ID.
     private DataReader reader;
 
@@ -27,6 +31,18 @@ public class DataStorage {
     public DataStorage(DataReader reader) {
         this.patientMap = new HashMap<>();
         this.reader = reader;
+    }
+
+    /**
+     * Provides a global point of access to the single instance of this class,
+     * ensuring that only one instance exists.
+     * @return the singleton instance
+     */
+    public static synchronized DataStorage getInstance() {
+        if (instance == null) {
+            instance = new DataStorage();
+        }
+        return instance;
     }
 
     /**
@@ -101,7 +117,7 @@ public class DataStorage {
     public static void main(String[] args) {
         // DataReader is not defined in this scope, should be initialized appropriately.
         // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
 
         // Assuming the reader has been properly initialized and can read data into the
         // storage
@@ -118,6 +134,11 @@ public class DataStorage {
 
         // Initialize the AlertGenerator with the storage
         AlertGenerator alertGenerator = new AlertGenerator(storage);
+
+        // Register the specific strategies
+        alertGenerator.addStrategy(new BloodPressureStrategy());
+        alertGenerator.addStrategy(new OxygenSaturationStrategy());
+        alertGenerator.addStrategy(new HeartRateStrategy());
 
         // Evaluate all patients' data to check for conditions that may trigger alerts
         for (Patient patient : storage.getAllPatients()) {

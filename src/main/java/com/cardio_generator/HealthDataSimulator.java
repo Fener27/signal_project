@@ -32,6 +32,8 @@ import java.util.ArrayList;
  */
 public class HealthDataSimulator {
 
+    private static HealthDataSimulator instance;
+
     /** Default number of patients to simulate if not specified. */
     private static int patientCount = 50; // Default number of patients
 
@@ -45,6 +47,21 @@ public class HealthDataSimulator {
     // Modified the final variable name to UPPER_SNAKE_CASE
     private static final Random RANDOM = new Random();
 
+    // Private constructor 
+    private HealthDataSimulator() {}
+
+    /**
+     * Provides a global point of access to the single instance of this class,
+     * ensuring that only one instance exists.
+     * @return the singleton instance
+     */
+    public static synchronized HealthDataSimulator getInstance() {
+        if (instance == null) {
+            instance = new HealthDataSimulator();
+        }
+        return instance;
+    }
+
     /**
      * Main entry point for the simulator application.
      * It handles the setup process including argument parsing, thread pool initialization, 
@@ -54,11 +71,11 @@ public class HealthDataSimulator {
      * @throws IOException if there is an error setting up file-based output directories.
      */
     public static void main(String[] args) throws IOException {
-        System.out.println("DEBUG: Starting main method..."); // Trace 1
+        /* System.out.println("DEBUG: Starting main method...");
         
         parseArguments(args);
         
-        System.out.println("DEBUG: Arguments parsed successfully."); // Trace 2
+        System.out.println("DEBUG: Arguments parsed successfully.");
         System.out.println("DEBUG: Patient Count: " + patientCount);
         System.out.println("DEBUG: Output Strategy: " + outputStrategy.getClass().getSimpleName());
 
@@ -66,8 +83,18 @@ public class HealthDataSimulator {
         scheduler = Executors.newScheduledThreadPool(10);
         
         List<Integer> patientIds = initializePatientIds(patientCount);
-        System.out.println("DEBUG: IDs initialized. Starting scheduler..."); // Trace 3
+        System.out.println("DEBUG: IDs initialized. Starting scheduler...");
 
+        scheduleTasksForPatients(patientIds); */
+        HealthDataSimulator simulator = HealthDataSimulator.getInstance();
+        simulator.run(args);
+
+    }
+
+    public void run(String[] args) throws IOException {
+        parseArguments(args);
+        scheduler = Executors.newScheduledThreadPool(10);
+        List<Integer> patientIds = initializePatientIds(patientCount);
         scheduleTasksForPatients(patientIds);
     }
 
@@ -79,7 +106,7 @@ public class HealthDataSimulator {
      * @param args the raw array of command-line arguments.
      * @throws IOException if directory creation for file output fails.
      */
-    private static void parseArguments(String[] args) throws IOException {
+    private void parseArguments(String[] args) throws IOException {
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "-h":
@@ -168,7 +195,7 @@ public class HealthDataSimulator {
      * @param patientCount the number of IDs to generate.
      * @return a list containing integers from 1 to patientCount.
      */
-    private static List<Integer> initializePatientIds(int patientCount) {
+    private List<Integer> initializePatientIds(int patientCount) {
         List<Integer> patientIds = new ArrayList<>();
         for (int i = 1; i <= patientCount; i++) {
             patientIds.add(i);
@@ -182,7 +209,7 @@ public class HealthDataSimulator {
      *
      * @param patientIds the list of patient IDs for whom tasks will be scheduled.
      */
-    private static void scheduleTasksForPatients(List<Integer> patientIds) {
+    private void scheduleTasksForPatients(List<Integer> patientIds) {
         ECGDataGenerator ecgDataGenerator = new ECGDataGenerator(patientCount);
         BloodSaturationDataGenerator bloodSaturationDataGenerator = new BloodSaturationDataGenerator(patientCount);
         BloodPressureDataGenerator bloodPressureDataGenerator = new BloodPressureDataGenerator(patientCount);

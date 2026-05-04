@@ -1,0 +1,7 @@
+Untested parts and reasons
+
+- Main class and HealthDataSimulator: these classes are entry points and external simulation logic. In
+projects they are often exluded for tests they focus on setting up the environment.
+
+- Blocks of IOException: some of them handle like the hard drive being disconnected during a read. These
+operations are difficult to trigger and will be power (and time) consuming in a scalable environment.

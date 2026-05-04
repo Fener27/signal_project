@@ -73,6 +73,16 @@ public class DataStorage {
     }
 
     /**
+     * Retrieves a Patient object by their ID.
+     * @param patientId The unique ID of the patient.
+     * @return The Patient object, or null if not found.
+     */
+    public Patient getPatient(int patientId) {
+        return patientMap.get(patientId); 
+        // This assumes your DataStorage uses a Map<Integer, Patient> called 'patients'
+    }
+
+    /**
      * Retrieves a collection of all patients stored in the data storage.
      *
      * @return a list of all patients
